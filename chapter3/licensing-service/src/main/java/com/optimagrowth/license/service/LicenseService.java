@@ -1,5 +1,6 @@
 package com.optimagrowth.license.service;
 
+import java.util.List;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,21 @@ public class LicenseService {
 	@Autowired
 	LicenseRepository licenseRepository;
 
-	public License getLicense(String licenseId, String organizationId) {
-		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
-		if (license == null) {
+	public License getLicense(String licenseId, String organizationId, Locale locale) {
+		List<License> matches = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
+		if (matches.isEmpty()) {
 			throw new IllegalArgumentException(
-					String.format("License %s for organization %s was not found.", licenseId, organizationId));
+					String.format(messages.getMessage("license.search.error.message", null, locale), licenseId, organizationId));
 		}
-		return license;
+		return matches.get(0);
 	}
 
 	public String createLicense(License license, String organizationId, Locale locale) {
 		String responseMessage = null;
 		if (!StringUtils.isEmpty(license)) {
-			license.setId(0);
 			license.setOrganizationId(organizationId);
+			applyExistingId(license, organizationId);
+
 			licenseRepository.save(license);
 			responseMessage = String.format(messages.getMessage("license.create.message", null, locale), license.toString());
 		}
@@ -44,11 +46,7 @@ public class LicenseService {
 		String responseMessage = null;
 		if (!StringUtils.isEmpty(license)) {
 			license.setOrganizationId(organizationId);
-
-			License existingLicense = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, license.getLicenseId());
-			if (existingLicense != null) {
-				license.setId(existingLicense.getId());
-			}
+			applyExistingId(license, organizationId);
 
 			licenseRepository.save(license);
 			responseMessage = String.format(messages.getMessage("license.update.message", null, locale), license.toString());
@@ -59,11 +57,23 @@ public class LicenseService {
 
 	public String deleteLicense(String licenseId, String organizationId, Locale locale) {
 		String responseMessage = null;
-		License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
-		if (license != null) {
-			licenseRepository.delete(license);
-		}
+		List<License> matches = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
+		licenseRepository.deleteAll(matches);
 		responseMessage = String.format(messages.getMessage("license.delete.message", null, locale), licenseId, organizationId);
 		return responseMessage;
+	}
+
+	/**
+	 * (organizationId, licenseId) is the natural key for a license in this demo app: if a row
+	 * already exists for that pair, reuse its generated id so save() updates it in place instead
+	 * of inserting a duplicate row.
+	 */
+	private void applyExistingId(License license, String organizationId) {
+		List<License> matches = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, license.getLicenseId());
+		if (!matches.isEmpty()) {
+			license.setId(matches.get(0).getId());
+		} else {
+			license.setId(0);
+		}
 	}
 }

@@ -32,11 +32,12 @@ public class LicenseController {
 
 	@RequestMapping(value="/{licenseId}",method = RequestMethod.GET)
 	public ResponseEntity<License> getLicense( @PathVariable("organizationId") String organizationId,
-			@PathVariable("licenseId") String licenseId) {
-		
-		License license = licenseService.getLicense(licenseId, organizationId);
-		license.add( 
-				linkTo(methodOn(LicenseController.class).getLicense(organizationId, license.getLicenseId())).withSelfRel(),
+			@PathVariable("licenseId") String licenseId,
+			@RequestHeader(value = "Accept-Language",required = false) Locale locale) {
+
+		License license = licenseService.getLicense(licenseId, organizationId, locale);
+		license.add(
+				linkTo(methodOn(LicenseController.class).getLicense(organizationId, license.getLicenseId(), null)).withSelfRel(),
 				linkTo(methodOn(LicenseController.class).createLicense(organizationId, license, null)).withRel("createLicense"),
 				linkTo(methodOn(LicenseController.class).updateLicense(organizationId, license, null)).withRel("updateLicense"),
 				linkTo(methodOn(LicenseController.class).deleteLicense(organizationId, license.getLicenseId(), null)).withRel("deleteLicense")
