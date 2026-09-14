@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "e4d3a2b1-1c2d-4e5f-9a8b-7c6d5e4f3a2b",
+		"name": "PotterTravis_Assignment3_PostmanCollection",
+		"description": "Postman collection for the Chapter 3 Licensing Service assignment (SFWE410). Exercises Create/Read/Update/Delete against com.optimagrowth.license.controller.LicenseController, once with no Accept-Language header and once each with en, es, and fr.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Initial Requests",
+			"item": [
+				{
+					"name": "Create License",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Creates a new license for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Get License",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Retrieves the license identified by licenseId for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Update License",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Updates the license for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete License",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Deletes the license identified by licenseId for the given organization."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requests (en)",
+			"item": [
+				{
+					"name": "Create License (en)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "en" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Creates a new license for the given organization (English response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get License (en)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept-Language", "value": "en" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Retrieves the license identified by licenseId for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Update License (en)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "en" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Updates the license for the given organization (English response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete License (en)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept-Language", "value": "en" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Deletes the license identified by licenseId for the given organization (English response message)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requests (es)",
+			"item": [
+				{
+					"name": "Create License (es)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "es" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Creates a new license for the given organization (Spanish response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get License (es)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept-Language", "value": "es" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Retrieves the license identified by licenseId for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Update License (es)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "es" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Updates the license for the given organization (Spanish response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete License (es)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept-Language", "value": "es" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Deletes the license identified by licenseId for the given organization (Spanish response message)."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Requests (fr)",
+			"item": [
+				{
+					"name": "Create License (fr)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "fr" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Creates a new license for the given organization (French response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Get License (fr)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept-Language", "value": "fr" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Retrieves the license identified by licenseId for the given organization."
+					},
+					"response": []
+				},
+				{
+					"name": "Update License (fr)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept-Language", "value": "fr" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"Optima Growth\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+							"options": { "raw": { "language": "json" } }
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license" ]
+						},
+						"description": "Updates the license for the given organization (French response message)."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete License (fr)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept-Language", "value": "fr" }
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+							"host": [ "{{baseUrl}}" ],
+							"path": [ "v1", "organization", "{{organizationId}}", "license", "{{licenseId}}" ]
+						},
+						"description": "Deletes the license identified by licenseId for the given organization (French response message)."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{ "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+		{ "key": "organizationId", "value": "optimaGrowth", "type": "string" },
+		{ "key": "licenseId", "value": "0235431845", "type": "string" }
+	]
+}
