@@ -4,6 +4,9 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+# H2 file-based database (generated at runtime)
+data/
+
 ### STS ###
 .apt_generated
 .classpath
