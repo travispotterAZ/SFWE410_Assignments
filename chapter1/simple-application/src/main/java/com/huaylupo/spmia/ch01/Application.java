@@ -30,6 +30,19 @@ public class Application {
 	public String helloPOST( @RequestBody HelloRequest request) {
 		return String.format("{\"message\":\"Hello %s %s\"}",request.getFirstName(), request.getLastName());
 	}
+
+	/**
+	 * GET /hello/ping delivers "pong". 
+	 * The optional "name" query param delivers "pong <name>" if present.
+	 */
+	@GetMapping(value="/ping")
+	public String ping(
+			@RequestParam(value="name", required=false) String name) {
+		if (name == null || name.isEmpty()) {
+			return "pong";
+		}
+		return String.format("pong %s", name);
+	}
 }
 
 class HelloRequest{
