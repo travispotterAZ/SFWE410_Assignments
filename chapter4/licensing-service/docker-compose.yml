@@ -1,9 +1,40 @@
 version: '3'
 
 services:
+  database:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "ostock_dev"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   licensingservice:
     image: ostock/licensing-service:0.0.1-SNAPSHOT
+    build:
+      context: .
+      args:
+        JAR_FILE: target/licensing-service-0.0.1-SNAPSHOT.jar
     ports:
       - "8080:8080"
     environment:
        - "SPRING_PROFILES_ACTIVE=dev"
+       - "DB_HOST=database"
+       - "DB_PORT=5432"
+       - "DB_NAME=ostock_dev"
+       - "DB_USER=postgres"
+       - "DB_PASSWORD=postgres"
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  pgdata:
