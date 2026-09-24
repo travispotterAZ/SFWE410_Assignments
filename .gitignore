@@ -53,3 +53,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### Videos ###
+*.mp4
