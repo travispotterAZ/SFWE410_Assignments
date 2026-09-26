@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "695bf5f0-e50d-47b5-bb0b-b7da77ac99a3",
+    "name": "PotterTravis_Assignment5_PostmanCollection",
+    "description": "Postman collection for the Chapter 5 (SFWE410).  \nExercises Create/Read/Update/Delete against com.optimagrowth.license.controller.LicenseController, running in Docker against the Postgres database defined in docker-compose.yml.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51743897",
+    "_collection_link": "https://go.postman.co/collection/51743897-695bf5f0-e50d-47b5-bb0b-b7da77ac99a3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "License CRUD",
+      "item": [
+        {
+          "name": "Create License",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// LicenseService.createLicense() always overwrites licenseId with a server-generated UUID,",
+                  "// so capture the real id from the response for the rest of the requests to use.",
+                  "const jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"licenseId\", jsonData.licenseId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"{{organizationId}}\",\n    \"description\": \"Software product\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license"
+              ]
+            },
+            "description": "Creates a new license for the given organization. Persisted via Spring Data JPA to the Postgres 'licenses' table. Note: LicenseService.createLicense() ignores the licenseId sent here and assigns a new random UUID server-side; the test script above captures the real id into {{licenseId}} for subsequent requests."
+          },
+          "response": []
+        },
+        {
+          "name": "Get License",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license",
+                "{{licenseId}}"
+              ]
+            },
+            "description": "Retrieves the license identified by licenseId for the given organization from Postgres."
+          },
+          "response": []
+        },
+        {
+          "name": "Update License",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"licenseId\": \"{{licenseId}}\",\n    \"organizationId\": \"{{organizationId}}\",\n    \"description\": \"Hardware product (updated)\",\n    \"productName\": \"Ostock\",\n    \"licenseType\": \"complete\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license"
+              ]
+            },
+            "description": "Updates the license for the given organization and persists the change to Postgres."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete License",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license",
+                "{{licenseId}}"
+              ]
+            },
+            "description": "Deletes the license identified by licenseId for the given organization from Postgres."
+          },
+          "response": []
+        },
+        {
+          "name": "Get License (Not Found)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license",
+                "{{licenseId}}"
+              ]
+            },
+            "description": "Run after Delete License to confirm the row is gone from Postgres (expects HTTP 404)."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "organizationId",
+      "value": "e6a625cc-718b-48c2-ac76-1dfdff9a531e",
+      "type": "string"
+    },
+    {
+      "key": "licenseId",
+      "value": "test-license-1",
+      "type": "string"
+    }
+  ]
+}
