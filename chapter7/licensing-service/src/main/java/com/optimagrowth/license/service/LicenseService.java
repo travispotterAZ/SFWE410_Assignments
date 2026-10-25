@@ -23,6 +23,7 @@ import com.optimagrowth.license.utils.UserContextHolder;
 
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead.Type;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
@@ -114,10 +115,7 @@ public class LicenseService {
 
 	}
 
-	@CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
-	@RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
-	@Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-	@Bulkhead(name = "bulkheadLicenseService", type= Type.THREADPOOL, fallbackMethod = "buildFallbackLicenseList")
+	@CircuitBreaker(name = "licenseService", fallbackMethod = "customFallbackLicenseList")
 	public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
 		logger.debug("getLicensesByOrganization Correlation id: {}",
 				UserContextHolder.getContext().getCorrelationId());
@@ -126,12 +124,25 @@ public class LicenseService {
 	}
 
 	@SuppressWarnings("unused")
-	private List<License> buildFallbackLicenseList(String organizationId, Throwable t){
-		List<License> fallbackList = new ArrayList<>();
+	private List<License> customFallbackLicenseList(String organizationId, Throwable t){
+		boolean circuitOpen = t instanceof CallNotPermittedException;
+		if (circuitOpen) {
+			logger.warn("customFallbackLicenseList: circuit breaker is OPEN, call rejected for organization {}", organizationId);
+		} else {
+			logger.warn("customFallbackLicenseList: call failed for organization {} ({}: {})",
+					organizationId, t.getClass().getSimpleName(), t.getMessage());
+		}
+
 		License license = new License();
 		license.setLicenseId("0000000-00-00000");
 		license.setOrganizationId(organizationId);
 		license.setProductName("Sorry no licensing information currently available");
+		license.setDescription("Fallback response from customFallbackLicenseList");
+		license.setComment(circuitOpen
+				? "Circuit breaker is open; the licensing lookup is temporarily disabled. Please retry shortly."
+				: "The licensing lookup failed or timed out (" + t.getClass().getSimpleName() + "). Please retry.");
+		
+				List<License> fallbackList = new ArrayList<>();
 		fallbackList.add(license);
 		return fallbackList;
 	}

@@ -1,0 +1,126 @@
+{
+  "info": {
+    "_postman_id": "8d5e25e5-5a0e-4f59-8913-f07a02c55614",
+    "name": "PotterTravis_Assignment7_PostmanCollection",
+    "description": "Requests for testing the Resilience4j circuit breaker (section 7.5) and fallback (section 7.6) in the licensing service. Start the stack first. Use the Collection Runner on 'Get Licenses by Organization' with 20+ iterations and 0 delay to watch the circuit open.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51743897",
+    "_collection_link": "https://go.postman.co/collection/51743897-8d5e25e5-5a0e-4f59-8913-f07a02c55614?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "CircuitBreaker_Fallback",
+      "item": [
+        {
+          "name": "Get Licenses by Organization (circuit breaker + fallback)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.text();",
+                  "const ms = pm.response.responseTime;",
+                  "let outcome;",
+                  "if (body.includes('is OPEN')) outcome = 'CIRCUIT OPEN (fail fast)';",
+                  "else if (body.includes('Sorry no licensing information')) outcome = 'FALLBACK';",
+                  "else if (pm.response.code >= 500) outcome = 'ERROR / TIMEOUT';",
+                  "else outcome = 'REAL DATA';",
+                  "console.log(outcome + ' - HTTP ' + pm.response.code + ' - ' + ms + ' ms');",
+                  "pm.test('Responded: ' + outcome, function () { pm.expect(pm.response.code).to.be.oneOf([200, 500]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license",
+                ""
+              ]
+            },
+            "description": "Calls LicenseService.getLicensesByOrganization, which randomly sleeps 5s. Without a fallback you see 500 timeouts and then 'CircuitBreaker is OPEN'. With the fallback you see the 'Sorry no licensing information' placeholder instead. Open the Postman Console (View > Show Postman Console) to see the per-call outcome."
+          },
+          "response": []
+        },
+        {
+          "name": "Circuit Breaker Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/circuitbreakerevents/licenseService",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "circuitbreakerevents",
+                "licenseService"
+              ]
+            },
+            "description": "History of SUCCESS / ERROR / NOT_PERMITTED events and state transitions (CLOSED_TO_OPEN, OPEN_TO_HALF_OPEN, HALF_OPEN_TO_CLOSED). Send this right after running the Get Licenses by Organization request."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "License CRUD",
+      "item": [
+        {
+          "name": "Get License",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/v1/organization/{{organizationId}}/license/{{licenseId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "organization",
+                "{{organizationId}}",
+                "license",
+                "{{licenseId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "eurekaUrl",
+      "value": "http://localhost:8070"
+    },
+    {
+      "key": "configUrl",
+      "value": "http://localhost:8071"
+    },
+    {
+      "key": "organizationId",
+      "value": "d898a142-de44-466c-8c88-9ceb2c2429d3"
+    },
+    {
+      "key": "licenseId",
+      "value": "f2a9c9d4-d2c0-44fa-97fe-724d77173c62"
+    }
+  ]
+}
